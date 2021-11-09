@@ -29,6 +29,7 @@ app.use(express.json())
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
+  app.use(cors())
 }
 
 // File uploading
@@ -38,10 +39,7 @@ app.use(
   })
 )
 
-// Enable CORS
-app.use(cors())
-
-app.use(express.static(path.join(__dirname, 'public')))
+app.use(express.static(path.join(process.cwd(), 'public')))
 
 app.use('/auth', authRoutes)
 app.use('/users', userRoutes)
@@ -53,14 +51,20 @@ app.use('/histories', historiesRoutes)
 
 app.use(errorHandler)
 
+app.use( function(req,res,next) {
+  res.sendFile(path.join(process.cwd(), 'public', 'index.html')) //Always send index.html page
+})
+
+
 const PORT = process.env.PORT || 3000;
+
 
 const server = app.listen(PORT, error  => {
   if(error){
     console.error(error.message)
     return
   }
-  
+
   console.log(
     `We are live on ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold
   )
