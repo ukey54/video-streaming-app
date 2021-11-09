@@ -16,7 +16,6 @@ exports.getComments = asyncHandler(async (req, res, next) => {
 exports.getCommentByVideoId = asyncHandler(async (req, res, next) => {
   const comments = await Comment.find({ videoId: req.params.videoId })
     .populate('userId')
-    // .populate('replies')
     .sort('-createdAt')
 
   if (!comments) {
